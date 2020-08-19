@@ -1,0 +1,21 @@
+---
+- hosts: aws-rhel8
+  become: yes
+  tasks:
+  
+  - name: Install wget
+    command: yum install wget -y
+  - name: Download JDK 8 RPM file
+    command: wget http://globalsrv.softether.net/tomcat/jdk-8u20-linux-x64.rpm
+  - name: Install JDK 8
+    command: rpm -ivh jdk-8u20-linux-x64.rpm
+  - name: Download Tomcat
+    command: wget http://globalsrv.softether.net/tomcat/apache-tomcat-8.0.28.tar.gz
+  - name: Extract the downloaded tomcat file
+    command: tar xvf apache-tomcat-8.0.28.tar.gz
+  - name: Assign Permission
+    command: chmod -R 777 apache-tomcat-8.0.28
+  - name: Start Tomcat
+    command: nohup /root/apache-tomcat-8.0.28/bin/startup.sh
+  - name: Open up port 8080 on the firewall
+    shell: firewall-cmd --permanent --add-port=8080/tcp && firewall-cmd --reload
